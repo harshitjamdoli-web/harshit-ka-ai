@@ -21,7 +21,7 @@ app = Flask(__name__)
 #
 # Never put the real API key inside GitHub code.
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+GROQ_API_KEY = os.environ.get("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")
 
 if not GROQ_API_KEY:
     raise RuntimeError(
