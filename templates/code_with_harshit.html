@@ -1,0 +1,3960 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>Code With Harshit — AI Python Studio</title>
+
+    <style>
+
+        /* =====================================================
+           🎨 ROOT
+        ===================================================== */
+
+        :root {
+            --bg: #07080d;
+            --bg2: #0d1018;
+            --panel: rgba(17, 20, 30, 0.82);
+            --panel-solid: #11141d;
+            --border: rgba(255,255,255,0.09);
+
+            --text: #f5f7ff;
+            --muted: #9299aa;
+
+            --primary: #7c5cff;
+            --secondary: #00d4ff;
+            --success: #35e28a;
+
+            --user: linear-gradient(
+                135deg,
+                #6848ff,
+                #a34cff
+            );
+
+            --ai: rgba(255,255,255,0.045);
+
+            --shadow:
+                0 20px 60px rgba(0,0,0,0.35);
+        }
+
+
+        /* =====================================================
+           🌐 GLOBAL
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background:
+                radial-gradient(
+                    circle at 15% 15%,
+                    rgba(124,92,255,0.14),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(0,212,255,0.10),
+                    transparent 25%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                system-ui,
+                sans-serif;
+
+            overflow: hidden;
+        }
+
+
+        /* =====================================================
+           ✨ ANIMATED BACKGROUND
+        ===================================================== */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .orb {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+
+            border-radius: 50%;
+
+            filter: blur(90px);
+
+            opacity: 0.16;
+
+            animation:
+                floatOrb 10s ease-in-out infinite alternate;
+        }
+
+        .orb.one {
+            background: #7c5cff;
+            top: -120px;
+            left: -100px;
+        }
+
+        .orb.two {
+            background: #00d4ff;
+            right: -120px;
+            bottom: -120px;
+
+            animation-delay: 2s;
+        }
+
+        @keyframes floatOrb {
+
+            from {
+                transform: translate(0,0) scale(1);
+            }
+
+            to {
+                transform: translate(80px,40px) scale(1.25);
+            }
+
+        }
+
+
+        /* =====================================================
+           🚀 INTRO
+        ===================================================== */
+
+        #loader {
+            position: fixed;
+            inset: 0;
+
+            background: #050509;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            z-index: 99999;
+
+            transition:
+                opacity .8s ease,
+                visibility .8s ease;
+        }
+
+        #loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-logo {
+            width: 90px;
+            height: 90px;
+
+            margin: auto auto 22px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #00d4ff
+                );
+
+            color: white;
+
+            font-size: 38px;
+            font-weight: 900;
+
+            box-shadow:
+                0 0 35px rgba(124,92,255,.5);
+
+            animation:
+                logoPulse 1.5s ease-in-out infinite;
+        }
+
+        .loader-title {
+            font-size: clamp(30px, 7vw, 58px);
+            font-weight: 900;
+
+            letter-spacing: -2px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #fff,
+                    #a58cff,
+                    #00d4ff
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .loader-subtitle {
+            color: #777e91;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        @keyframes logoPulse {
+
+            0%,100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+        }
+
+
+        /* =====================================================
+           🧱 APP
+        ===================================================== */
+
+        .app {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+        }
+
+
+        /* =====================================================
+           📚 SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            width: 280px;
+
+            background:
+                rgba(10,12,18,.88);
+
+            backdrop-filter: blur(25px);
+
+            border-right:
+                1px solid var(--border);
+
+            padding: 18px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 14px;
+
+            z-index: 100;
+
+            transition:
+                transform .35s ease;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 10px 4px 18px;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #00d4ff
+                );
+
+            font-weight: 900;
+
+            box-shadow:
+                0 0 22px rgba(124,92,255,.3);
+        }
+
+        .brand-name {
+            font-weight: 850;
+            font-size: 15px;
+        }
+
+        .brand-small {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+
+        /* =====================================================
+           🔥 SIDEBAR BUTTONS
+        ===================================================== */
+
+        .side-btn {
+            width: 100%;
+
+            border: 1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,255,255,.06),
+                    rgba(255,255,255,.025)
+                );
+
+            color: var(--text);
+
+            padding: 13px 15px;
+
+            border-radius: 15px;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-weight: 700;
+            font-size: 13px;
+
+            transition:
+                transform .2s ease,
+                border .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+        }
+
+        .side-btn:hover {
+            transform: translateY(-2px);
+
+            border-color:
+                rgba(124,92,255,.6);
+
+            box-shadow:
+                0 8px 25px rgba(124,92,255,.15);
+
+            background:
+                rgba(124,92,255,.10);
+        }
+
+        .side-btn:active {
+            transform: scale(.97);
+        }
+
+
+        /* =====================================================
+           🧠 MODES
+        ===================================================== */
+
+        .section-title {
+            color: var(--muted);
+
+            font-size: 10px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1.5px;
+
+            margin:
+                8px 5px 2px;
+        }
+
+        .modes {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .mode-btn {
+            border: 1px solid transparent;
+
+            background: transparent;
+
+            color: #b9bfce;
+
+            padding: 11px 12px;
+
+            border-radius: 13px;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-weight: 700;
+            font-size: 12px;
+
+            transition: .2s ease;
+        }
+
+        .mode-btn:hover {
+            color: white;
+
+            background:
+                rgba(255,255,255,.05);
+        }
+
+        .mode-btn.active {
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124,92,255,.20),
+                    rgba(0,212,255,.08)
+                );
+
+            border-color:
+                rgba(124,92,255,.35);
+
+            box-shadow:
+                inset 0 0 20px rgba(124,92,255,.06);
+        }
+
+
+        /* =====================================================
+           🕘 HISTORY
+        ===================================================== */
+
+        .history {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding-right: 3px;
+        }
+
+        .history-title {
+            color: #73798a;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            margin:
+                14px 6px 7px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+        .history-list {
+            list-style: none;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 4px;
+        }
+
+        .history-list li {
+            padding: 10px 12px;
+
+            border-radius: 11px;
+
+            color: #a5abba;
+
+            cursor: pointer;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            font-size: 12px;
+
+            transition: .2s ease;
+        }
+
+        .history-list li:hover {
+            background:
+                rgba(255,255,255,.05);
+
+            color: white;
+        }
+
+
+        .sidebar-footer {
+            border-top:
+                1px solid var(--border);
+
+            padding-top: 13px;
+
+            text-align: center;
+
+            color: #686f80;
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           🖥️ MAIN
+        ===================================================== */
+
+        .main {
+            flex: 1;
+
+            min-width: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            height: 100%;
+        }
+
+
+        /* =====================================================
+           🧭 HEADER
+        ===================================================== */
+
+        .header {
+            height: 70px;
+
+            padding:
+                0 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom:
+                1px solid var(--border);
+
+            background:
+                rgba(7,8,13,.65);
+
+            backdrop-filter: blur(20px);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mobile-menu {
+            display: none;
+
+            width: 42px;
+            height: 42px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
+            background:
+                rgba(255,255,255,.05);
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 20px;
+        }
+
+        .studio-title {
+            font-size: 14px;
+            font-weight: 850;
+        }
+
+        .online {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            color: var(--success);
+
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .online-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--success);
+
+            box-shadow:
+                0 0 10px var(--success);
+
+            animation:
+                onlinePulse 1.5s infinite;
+        }
+
+        @keyframes onlinePulse {
+
+            50% {
+                opacity: .35;
+            }
+
+        }
+
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            border: 1px solid var(--border);
+
+            background:
+                rgba(255,255,255,.045);
+
+            color: #cdd2df;
+
+            padding: 9px 12px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-size: 11px;
+            font-weight: 750;
+
+            transition: .2s ease;
+        }
+
+        .header-btn:hover {
+            color: white;
+
+            transform: translateY(-1px);
+
+            border-color:
+                rgba(124,92,255,.5);
+
+            box-shadow:
+                0 5px 18px rgba(124,92,255,.12);
+        }
+
+
+        /* =====================================================
+           💬 CHAT
+        ===================================================== */
+
+        .chat {
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding:
+                30px 22px;
+
+            scroll-behavior: smooth;
+        }
+
+        .chat-inner {
+            width: 100%;
+            max-width: 900px;
+
+            margin: auto;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 18px;
+        }
+
+
+        .welcome {
+            padding: 25px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124,92,255,.10),
+                    rgba(0,212,255,.04)
+                );
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .welcome h1 {
+            font-size: clamp(24px, 5vw, 36px);
+
+            margin-bottom: 8px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    white,
+                    #a993ff,
+                    #61ddff
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .welcome p {
+            color: var(--muted);
+
+            line-height: 1.6;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           💬 MESSAGE
+        ===================================================== */
+
+        .message {
+            max-width: 84%;
+
+            padding: 15px 17px;
+
+            border-radius: 18px;
+
+            line-height: 1.65;
+
+            font-size: 14px;
+
+            position: relative;
+
+            animation:
+                messageIn .3s ease;
+
+            word-wrap: break-word;
+        }
+
+        @keyframes messageIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .user-message {
+            align-self: flex-end;
+
+            background:
+                var(--user);
+
+            border-bottom-right-radius: 5px;
+
+            box-shadow:
+                0 10px 30px rgba(104,72,255,.18);
+        }
+
+        .ai-message {
+            align-self: flex-start;
+
+            background:
+                var(--ai);
+
+            border:
+                1px solid var(--border);
+
+            border-bottom-left-radius: 5px;
+
+            backdrop-filter: blur(15px);
+        }
+
+
+        /* =====================================================
+           💻 CODE
+        ===================================================== */
+
+        .code-block {
+            margin-top: 12px;
+
+            background: #05060a;
+
+            border:
+                1px solid rgba(255,255,255,.09);
+
+            border-radius: 13px;
+
+            overflow: hidden;
+
+            position: relative;
+        }
+
+        .code-header {
+            padding: 8px 11px;
+
+            display: flex;
+            justify-content: space-between;
+
+            color: #777f91;
+
+            font-size: 10px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,.06);
+        }
+
+        .copy-code {
+            border: 0;
+
+            background:
+                rgba(255,255,255,.06);
+
+            color: #c8ccda;
+
+            border-radius: 7px;
+
+            padding: 5px 8px;
+
+            cursor: pointer;
+
+            font-size: 10px;
+        }
+
+        pre {
+            margin: 0;
+
+            padding: 14px;
+
+            overflow-x: auto;
+
+            font-family:
+                "Cascadia Code",
+                Consolas,
+                monospace;
+
+            font-size: 12px;
+
+            color: #dfe5ff;
+        }
+
+
+        /* =====================================================
+           ⏳ THINKING
+        ===================================================== */
+
+        .thinking {
+            align-self: flex-start;
+
+            padding: 12px 15px;
+
+            border-radius: 15px;
+
+            border:
+                1px solid rgba(124,92,255,.3);
+
+            background:
+                rgba(124,92,255,.08);
+
+            color: #bcaeff;
+
+            font-family: monospace;
+
+            font-size: 11px;
+        }
+
+        .dots span {
+            animation:
+                blink 1.2s infinite;
+        }
+
+        .dots span:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .dots span:nth-child(3) {
+            animation-delay: .4s;
+        }
+
+        @keyframes blink {
+
+            0%,100% {
+                opacity: .2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+        }
+
+
+        /* =====================================================
+           🎯 MODE BAR
+        ===================================================== */
+
+        .mode-bar {
+            max-width: 900px;
+
+            width: 100%;
+
+            margin:
+                0 auto 10px;
+
+            padding:
+                0 22px;
+
+            display: flex;
+
+            gap: 7px;
+
+            overflow-x: auto;
+
+            scrollbar-width: none;
+        }
+
+        .mode-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quick-mode {
+            flex-shrink: 0;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(255,255,255,.035);
+
+            color: #aeb4c4;
+
+            padding: 9px 12px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+            font-weight: 750;
+
+            transition: .2s ease;
+        }
+
+        .quick-mode:hover,
+        .quick-mode.active {
+            color: white;
+
+            border-color:
+                rgba(124,92,255,.5);
+
+            background:
+                rgba(124,92,255,.13);
+
+            box-shadow:
+                0 0 18px rgba(124,92,255,.12);
+        }
+
+
+        /* =====================================================
+           ⌨️ INPUT
+        ===================================================== */
+
+        .input-area {
+            width: 100%;
+
+            max-width: 900px;
+
+            margin:
+                0 auto;
+
+            padding:
+                0 22px 18px;
+        }
+
+        .input-box {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px;
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            border-radius: 20px;
+
+            background:
+                rgba(17,20,30,.9);
+
+            backdrop-filter:
+                blur(20px);
+
+            box-shadow:
+                0 15px 45px rgba(0,0,0,.28);
+
+            transition: .25s ease;
+        }
+
+        .input-box:focus-within {
+            border-color:
+                rgba(124,92,255,.65);
+
+            box-shadow:
+                0 0 0 3px rgba(124,92,255,.08),
+                0 15px 50px rgba(0,0,0,.35);
+        }
+
+        #userInput {
+            flex: 1;
+
+            min-width: 0;
+
+            border: 0;
+            outline: 0;
+
+            background: transparent;
+
+            color: white;
+
+            padding:
+                11px 12px;
+
+            font-size: 14px;
+        }
+
+        #userInput::placeholder {
+            color: #626a7c;
+        }
+
+
+        /* =====================================================
+           🔥 BIG SEND BUTTON
+        ===================================================== */
+
+        .send-btn {
+            min-width: 92px;
+
+            border: 0;
+
+            padding:
+                12px 18px;
+
+            border-radius: 15px;
+
+            cursor: pointer;
+
+            color: white;
+
+            font-weight: 850;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #b34cff
+                );
+
+            box-shadow:
+                0 8px 25px rgba(124,92,255,.3);
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease;
+        }
+
+        .send-btn:hover {
+            transform:
+                translateY(-2px)
+                scale(1.02);
+
+            box-shadow:
+                0 12px 35px rgba(124,92,255,.45);
+        }
+
+        .send-btn:active {
+            transform:
+                scale(.95);
+        }
+
+
+        .input-hint {
+            text-align: center;
+
+            color: #555c6d;
+
+            font-size: 9px;
+
+            margin-top: 7px;
+        }
+
+
+        /* =====================================================
+           📱 MOBILE
+        ===================================================== */
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                position: fixed;
+
+                left: 0;
+                top: 0;
+                bottom: 0;
+
+                transform:
+                    translateX(-105%);
+
+                box-shadow:
+                    20px 0 60px rgba(0,0,0,.5);
+            }
+
+            .sidebar.open {
+                transform:
+                    translateX(0);
+            }
+
+            .mobile-menu {
+                display: grid;
+                place-items: center;
+            }
+
+            .header {
+                height: 62px;
+
+                padding:
+                    0 12px;
+            }
+
+            .header-controls {
+                gap: 5px;
+            }
+
+            .header-btn {
+                padding:
+                    8px 9px;
+
+                font-size: 10px;
+            }
+
+            .studio-title {
+                font-size: 12px;
+            }
+
+            .chat {
+                padding:
+                    18px 12px;
+            }
+
+            .message {
+                max-width: 92%;
+
+                font-size: 13px;
+            }
+
+            .welcome {
+                padding: 19px;
+
+                border-radius: 19px;
+            }
+
+            .mode-bar {
+                padding:
+                    0 12px;
+            }
+
+            .input-area {
+                padding:
+                    0 10px 10px;
+            }
+
+            .input-box {
+                border-radius: 17px;
+            }
+
+            .send-btn {
+                min-width: 50px;
+
+                width: 50px;
+
+                padding:
+                    12px 0;
+
+                font-size: 0;
+            }
+
+            .send-btn::after {
+                content: "➤";
+
+                font-size: 17px;
+            }
+
+            .input-hint {
+                display: none;
+            }
+
+        }
+
+
+        /* =====================================================
+           📱 SMALL MOBILE
+        ===================================================== */
+
+        @media (max-width: 480px) {
+
+            .header-btn {
+                font-size: 0;
+
+                width: 38px;
+                height: 38px;
+
+                display: grid;
+                place-items: center;
+            }
+
+            .header-btn.audio::after {
+                content: "🔊";
+                font-size: 14px;
+            }
+
+            .header-btn.desi::after {
+                content: "🔥";
+                font-size: 14px;
+            }
+
+            .header-btn.theme::after {
+                content: "⚡";
+                font-size: 14px;
+            }
+
+            .studio-title {
+                max-width: 115px;
+
+                overflow: hidden;
+
+                white-space: nowrap;
+
+                text-overflow: ellipsis;
+            }
+
+            #userInput {
+                font-size: 13px;
+            }
+
+        }
+
+    
+/* =====================================================
+   🐍 V3 PYTHON EDITOR
+===================================================== */
+
+.python-editor {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 12px;
+    border: 1px solid rgba(124,92,255,.28);
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(5,7,12,.94);
+    box-shadow: 0 18px 55px rgba(0,0,0,.30);
+}
+
+.editor-header {
+    min-height: 60px;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.editor-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.python-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: linear-gradient(135deg, rgba(124,92,255,.22), rgba(0,212,255,.10));
+    box-shadow: 0 0 22px rgba(124,92,255,.12);
+}
+
+.editor-title strong {
+    display: block;
+    font-size: 13px;
+}
+
+.editor-title small {
+    display: block;
+    color: #72798a;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.editor-status {
+    color: #35e28a;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.editor-body {
+    display: flex;
+    min-height: 225px;
+    max-height: 390px;
+    background: #030408;
+}
+
+.line-numbers {
+    width: 43px;
+    flex: 0 0 43px;
+    padding: 15px 9px;
+    color: #444b5b;
+    background: #080a10;
+    border-right: 1px solid rgba(255,255,255,.05);
+    text-align: right;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    user-select: none;
+    overflow: hidden;
+}
+
+#codeEditor {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    resize: none;
+    border: 0;
+    outline: 0;
+    padding: 15px;
+    background: transparent;
+    color: #e8ebff;
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    tab-size: 4;
+}
+
+#codeEditor::placeholder {
+    color: #454b5b;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 7px;
+    padding: 9px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,.025);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.editor-actions::-webkit-scrollbar {
+    display: none;
+}
+
+.editor-btn {
+    border: 1px solid rgba(255,255,255,.09);
+    padding: 9px 13px;
+    border-radius: 11px;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 850;
+    white-space: nowrap;
+    transition: .2s ease;
+}
+
+.editor-btn:hover {
+    transform: translateY(-2px);
+}
+
+.editor-btn:active {
+    transform: scale(.96);
+}
+
+.editor-btn.run {
+    background: linear-gradient(135deg, #20a96b, #35e28a);
+    color: #04130b;
+}
+
+.editor-btn.debug {
+    background: rgba(124,92,255,.15);
+    border-color: rgba(124,92,255,.35);
+}
+
+.editor-btn.save {
+    background: rgba(0,212,255,.10);
+    border-color: rgba(0,212,255,.25);
+}
+
+.editor-btn.clear {
+    background: rgba(255,70,90,.08);
+    border-color: rgba(255,70,90,.18);
+}
+
+.output-panel {
+    border-top: 1px solid rgba(255,255,255,.07);
+    background: #020307;
+}
+
+.output-header {
+    height: 37px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #737b8e;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.output-header button {
+    border: 0;
+    background: rgba(255,255,255,.05);
+    color: #8c94a6;
+    padding: 5px 8px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 9px;
+}
+
+#codeOutput {
+    min-height: 70px;
+    max-height: 190px;
+    overflow: auto;
+    padding: 0 14px 14px;
+    color: #b9ffd8;
+    font-family: Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 850px) {
+    .python-editor {
+        margin: 0 12px 12px;
+        width: calc(100% - 24px);
+        border-radius: 17px;
+    }
+
+    .editor-body {
+        min-height: 190px;
+    }
+
+    #codeEditor {
+        font-size: 11px;
+    }
+
+    .line-numbers {
+        width: 37px;
+        flex-basis: 37px;
+        font-size: 11px;
+    }
+
+    .editor-title strong {
+        font-size: 12px;
+    }
+
+    .editor-btn {
+        padding: 9px 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .python-editor {
+        margin: 0 8px 10px;
+        width: calc(100% - 16px);
+    }
+
+    .editor-header {
+        min-height: 54px;
+    }
+
+    .editor-status {
+        display: none;
+    }
+
+    .editor-body {
+        min-height: 180px;
+    }
+
+    #codeEditor {
+        padding: 13px 10px;
+        font-size: 11px;
+    }
+
+    .line-numbers {
+        padding: 13px 7px;
+    }
+}
+
+    
+/* =====================================================
+   🚀 CODE WITH HARSHIT — SPACE CODE INTRO
+===================================================== */
+
+#spaceIntro {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 50%, #19204a 0%, #090b1c 38%, #02030a 72%, #000 100%);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .5s ease, visibility .5s ease;
+}
+
+#spaceIntro.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#spaceIntro .intro-stars {
+    position: absolute;
+    inset: -20%;
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,.95) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(120,190,255,.85) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(180,120,255,.7) 0 1px, transparent 1.5px);
+    background-size: 75px 75px, 123px 123px, 187px 187px;
+    animation: introStarsMove 1.25s linear infinite;
+    opacity: .75;
+}
+
+@keyframes introStarsMove {
+    from { transform: scale(1); }
+    to { transform: scale(1.16); }
+}
+
+.intro-code-field {
+    position: absolute;
+    inset: 0;
+    perspective: 700px;
+    overflow: hidden;
+}
+
+.intro-code {
+    --angle: 0deg;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 240px;
+    margin-left: -120px;
+    margin-top: -13px;
+    color: rgba(160,220,255,.92);
+    font: 800 10px/26px Consolas, monospace;
+    letter-spacing: .4px;
+    white-space: nowrap;
+    text-align: center;
+    opacity: 0;
+    transform: rotate(var(--angle)) translateX(0) scale(.25);
+    transform-origin: center;
+    animation: introCodeRush .82s cubic-bezier(.12,.82,.15,1) forwards;
+    text-shadow:
+        0 0 7px rgba(80,180,255,.95),
+        0 0 18px rgba(100,90,255,.65);
+}
+
+.intro-code:nth-child(1)  { animation-delay: .00s; }
+.intro-code:nth-child(2)  { animation-delay: .025s; }
+.intro-code:nth-child(3)  { animation-delay: .05s; }
+.intro-code:nth-child(4)  { animation-delay: .075s; }
+.intro-code:nth-child(5)  { animation-delay: .10s; }
+.intro-code:nth-child(6)  { animation-delay: .125s; }
+.intro-code:nth-child(7)  { animation-delay: .15s; }
+.intro-code:nth-child(8)  { animation-delay: .175s; }
+.intro-code:nth-child(9)  { animation-delay: .20s; }
+.intro-code:nth-child(10) { animation-delay: .225s; }
+.intro-code:nth-child(11) { animation-delay: .25s; }
+.intro-code:nth-child(12) { animation-delay: .275s; }
+.intro-code:nth-child(13) { animation-delay: .30s; }
+.intro-code:nth-child(14) { animation-delay: .325s; }
+.intro-code:nth-child(15) { animation-delay: .35s; }
+.intro-code:nth-child(16) { animation-delay: .375s; }
+.intro-code:nth-child(17) { animation-delay: .40s; }
+.intro-code:nth-child(18) { animation-delay: .425s; }
+
+@keyframes introCodeRush {
+    0% {
+        opacity: 0;
+        transform: rotate(var(--angle)) translateX(0) scale(.18);
+        filter: blur(3px);
+    }
+    13% {
+        opacity: 1;
+        filter: blur(0);
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(var(--angle)) translateX(650px) scale(1.55);
+        filter: blur(.2px);
+    }
+}
+
+.intro-core {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle,
+            #fff 0 3%,
+            #9edbff 8%,
+            #6e8cff 24%,
+            #7650ff 42%,
+            transparent 72%);
+    box-shadow:
+        0 0 30px rgba(130,200,255,.95),
+        0 0 75px rgba(100,110,255,.8),
+        0 0 150px rgba(110,65,255,.55);
+    animation: introCore .72s ease-out forwards;
+}
+
+@keyframes introCore {
+    0%   { transform: scale(.03); opacity: 0; }
+    35%  { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(4.8); opacity: 0; }
+}
+
+.intro-title {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    opacity: 0;
+    transform: scale(.08);
+    animation: introTitle .78s cubic-bezier(.08,.9,.18,1) .46s forwards;
+}
+
+.intro-title .intro-small {
+    display: block;
+    margin-bottom: 10px;
+    color: #a8b4ff;
+    font: 900 9px/1 Consolas, monospace;
+    letter-spacing: 5px;
+    text-shadow: 0 0 16px rgba(125,140,255,.95);
+}
+
+.intro-title h1 {
+    margin: 0;
+    color: #fff;
+    font: 950 clamp(30px, 7vw, 78px)/.92 Arial, sans-serif;
+    letter-spacing: -3px;
+    text-shadow:
+        0 0 12px rgba(255,255,255,.95),
+        0 0 35px rgba(90,150,255,.9),
+        0 0 80px rgba(115,70,255,.85);
+}
+
+.intro-title h1 span {
+    color: #7bd0ff;
+}
+
+.intro-loading {
+    width: 180px;
+    height: 2px;
+    margin: 18px auto 0;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255,255,255,.12);
+}
+
+.intro-loading::after {
+    content: "";
+    display: block;
+    width: 45%;
+    height: 100%;
+    border-radius: inherit;
+    background: #8c7cff;
+    box-shadow: 0 0 15px #8c7cff;
+    animation: introLoading .55s ease-in-out infinite alternate;
+}
+
+@keyframes introLoading {
+    from { transform: translateX(-15px); }
+    to   { transform: translateX(145px); }
+}
+
+@keyframes introTitle {
+    0% {
+        opacity: 0;
+        transform: scale(.08);
+        filter: blur(12px);
+    }
+    58% {
+        opacity: 1;
+        transform: scale(1.12);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+/* =====================================================
+   🐍 EDITOR OPEN / CLOSE
+===================================================== */
+
+.editor-close-btn {
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,70,90,.09);
+    color: #ff9aa7;
+    padding: 7px 10px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 900;
+    transition: .2s ease;
+}
+
+.editor-close-btn:hover {
+    transform: translateY(-1px);
+    background: rgba(255,70,90,.16);
+}
+
+.python-editor.editor-hidden {
+    display: none !important;
+}
+
+.python-editor-open-btn {
+    display: none;
+    width: max-content;
+    margin: 0 auto 10px;
+    border: 1px solid rgba(124,92,255,.35);
+    background: linear-gradient(135deg, rgba(124,92,255,.20), rgba(0,212,255,.10));
+    color: #fff;
+    padding: 9px 14px;
+    border-radius: 11px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 900;
+    box-shadow: 0 8px 25px rgba(70,70,180,.16);
+    transition: .2s ease;
+}
+
+.python-editor-open-btn:hover {
+    transform: translateY(-2px);
+}
+
+.python-editor-open-btn.show {
+    display: block;
+}
+
+@media (max-width: 480px) {
+    .intro-title h1 {
+        letter-spacing: -2px;
+    }
+
+    .intro-code {
+        font-size: 8px;
+    }
+}
+
+
+/* =====================================================
+   📚 CODE WITH HARSHIT — LEARNING DASHBOARD V5
+===================================================== */
+
+.learning-dashboard {
+    width: min(900px, calc(100% - 24px));
+    margin: 0 auto 14px;
+    display: grid;
+    gap: 10px;
+}
+
+.learning-top {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 10px;
+}
+
+.learning-card,
+.challenge-card {
+    border: 1px solid rgba(124,92,255,.20);
+    background: rgba(7,9,16,.78);
+    border-radius: 17px;
+    padding: 13px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.18);
+}
+
+.learning-card h3,
+.challenge-card h3 {
+    margin: 0 0 5px;
+    font-size: 12px;
+}
+
+.learning-card p,
+.challenge-card p {
+    margin: 0;
+    color: #7e879a;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.progress-wrap {
+    margin-top: 10px;
+}
+
+.progress-bar {
+    height: 7px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+}
+
+#progressFill {
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg,#765cff,#55c9ff);
+    box-shadow: 0 0 14px rgba(100,120,255,.55);
+    transition: width .35s ease;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    color: #697286;
+    font-size: 9px;
+}
+
+.xp-badge {
+    color: #ffd86b;
+    font-size: 18px;
+    font-weight: 950;
+}
+
+.lesson-list {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.lesson-item {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,.025);
+    color: #cbd2e2;
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 10px;
+    transition: .18s ease;
+}
+
+.lesson-item:hover {
+    transform: translateX(2px);
+    border-color: rgba(124,92,255,.3);
+}
+
+.lesson-item.done {
+    color: #73edaa;
+    border-color: rgba(53,226,138,.2);
+}
+
+.challenge-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.challenge-btn {
+    border: 1px solid rgba(255,255,255,.09);
+    background: rgba(124,92,255,.12);
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 11px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 850;
+}
+
+.challenge-btn:hover {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 700px) {
+    .learning-top {
+        grid-template-columns: 1fr;
+    }
+
+    .learning-dashboard {
+        width: calc(100% - 16px);
+    }
+}
+
+
+.editor-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 480px) {
+    .editor-head-actions .editor-status {
+        display: none;
+    }
+}
+
+</style>
+</head>
+
+
+<body id="bodyTag">
+
+
+    <!-- =====================================================
+         🌌 BACKGROUND
+    ====================================================== -->
+
+    <div class="background">
+        <div class="orb one"></div>
+        <div class="orb two"></div>
+    </div>
+
+
+    <!-- =====================================================
+         🚀 LOADER
+    ====================================================== -->
+
+    <div id="loader">
+
+        <div class="loader-content">
+
+            <div class="loader-logo">
+                H
+            </div>
+
+            <div class="loader-title">
+                Code With Harshit
+            </div>
+
+            <div class="loader-subtitle">
+                AI Python Learning Studio ⚡
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         📱 APP
+    ====================================================== -->
+
+    <div class="app">
+
+
+        <!-- =================================================
+             📚 SIDEBAR
+        ================================================== -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    H
+                </div>
+
+                <div>
+                    <div class="brand-name">
+                        Code With Harshit
+                    </div>
+
+                    <div class="brand-small">
+                        AI Coding Studio
+                    </div>
+                </div>
+
+            </div>
+
+
+            <button class="side-btn"
+                onclick="startNewChat()">
+                ➕
+                <span>New Chat</span>
+            </button>
+
+
+            <button class="side-btn"
+                onclick="searchCodes()">
+                🔍
+                <span>Search History</span>
+            </button>
+
+
+            <div class="section-title">
+                AI MODES
+            </div>
+
+
+            <div class="modes">
+
+                <button
+                    class="mode-btn active"
+                    data-mode="teacher"
+                    onclick="selectMode('teacher', this)">
+                    🧠
+                    <span>Teacher Mode</span>
+                </button>
+
+                <button
+                    class="mode-btn"
+                    data-mode="debugger"
+                    onclick="selectMode('debugger', this)">
+                    🐛
+                    <span>Debugger</span>
+                </button>
+
+                <button
+                    class="mode-btn"
+                    data-mode="practice"
+                    onclick="selectMode('practice', this)">
+                    🧪
+                    <span>Practice Arena</span>
+                </button>
+
+                <button
+                    class="mode-btn"
+                    data-mode="game"
+                    onclick="selectMode('game', this)">
+                    🎮
+                    <span>Game Builder</span>
+                </button>
+
+                <button
+                    class="mode-btn"
+                    data-mode="web"
+                    onclick="selectMode('web', this)">
+                    🌐
+                    <span>Web Builder</span>
+                </button>
+
+            </div>
+
+
+            <div class="history">
+
+                <div class="history-title">
+                    Today
+                </div>
+
+                <ul
+                    class="history-list"
+                    id="todayChatsList">
+                </ul>
+
+
+                <div class="history-title">
+                    Saved Chats
+                </div>
+
+                <ul
+                    class="history-list"
+                    id="yesterdayChatsList">
+                </ul>
+
+            </div>
+
+
+            <div class="sidebar-footer">
+                🤖 Powered by AI • Made for Coders
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             🖥️ MAIN
+        ================================================== -->
+
+        <main class="main">
+
+
+            <!-- HEADER -->
+
+            <header class="header">
+
+                <div class="header-left">
+
+                    <button
+                        class="mobile-menu"
+                        onclick="toggleSidebar()">
+                        ☰
+                    </button>
+
+                    <div>
+
+                        <div class="studio-title">
+                            ⚡ Python AI Studio
+                        </div>
+
+                        <div class="online">
+                            <span class="online-dot"></span>
+                            Live Engine
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="header-controls">
+
+                    <button
+                        class="header-btn audio"
+                        onclick="toggleVoice()"
+                        id="voiceToggleBtn">
+                        🔊 Audio
+                    </button>
+
+                    <button
+                        class="header-btn desi"
+                        onclick="toggleDesi()"
+                        id="modeToggleBtn">
+                        🔥 Desi
+                    </button>
+
+                    <button
+                        class="header-btn theme"
+                        onclick="toggleTheme()">
+                        ⚡ Theme
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 💬 CHAT
+            ================================================== -->
+
+            <section
+                class="chat"
+                id="chatBox">
+
+                <div class="chat-inner"
+                    id="chatInner">
+
+
+                    <div class="welcome">
+
+                        <h1>
+                            Code With Harshit 🚀
+                        </h1>
+
+                        <p>
+                            Bhai Python seekhna hai?
+                            Code likhna hai?
+                            Error fix karna hai?
+                            Game ya website banana hai?
+                            Bol — AI teacher ready hai 😎
+                        </p>
+
+                    </div>
+
+
+                    <div class="message ai-message">
+
+                        Namaste bhai! 👋<br><br>
+
+                        Main <b>Code With Harshit</b> hoon.
+                        Bata aaj kya banana hai? 🔥
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+<!-- =====================================================
+     🐍 V3 PYTHON CODE EDITOR
+====================================================== -->
+
+
+<!-- =====================================================
+     📚 LEARNING DASHBOARD
+===================================================== -->
+
+<section class="learning-dashboard">
+
+    <div class="learning-top">
+
+        <div class="learning-card">
+
+            <h3>📚 Python Learning Roadmap</h3>
+            <p>Lesson select karo, complete karo aur apna progress build karo.</p>
+
+            <div class="progress-wrap">
+
+                <div class="progress-bar">
+                    <div id="progressFill"></div>
+                </div>
+
+                <div class="progress-text">
+                    <span id="progressLabel">0% Complete</span>
+                    <span class="xp-badge" id="xpLabel">0 XP</span>
+                </div>
+
+            </div>
+
+            <div class="lesson-list">
+
+                <button class="lesson-item" data-lesson="0"
+                    onclick="selectLesson(0)">
+                    1. 🐍 Python Basics
+                </button>
+
+                <button class="lesson-item" data-lesson="1"
+                    onclick="selectLesson(1)">
+                    2. 📦 Variables & Data
+                </button>
+
+                <button class="lesson-item" data-lesson="2"
+                    onclick="selectLesson(2)">
+                    3. 🔀 If / Else
+                </button>
+
+                <button class="lesson-item" data-lesson="3"
+                    onclick="selectLesson(3)">
+                    4. 🔁 Loops
+                </button>
+
+                <button class="lesson-item" data-lesson="4"
+                    onclick="selectLesson(4)">
+                    5. 🧩 Functions
+                </button>
+
+                <button class="lesson-item" data-lesson="5"
+                    onclick="selectLesson(5)">
+                    6. 🚀 Mini Projects
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="challenge-card">
+
+            <h3>🧪 Daily Coding Challenge</h3>
+
+            <p id="challengeText">
+                2 numbers ko add karke result print karo.
+            </p>
+
+            <div class="challenge-actions">
+
+                <button
+                    type="button"
+                    class="challenge-btn"
+                    onclick="loadChallenge()">
+                    🎲 New Challenge
+                </button>
+
+                <button
+                    type="button"
+                    class="challenge-btn"
+                    onclick="putChallengeHint()">
+                    💡 Hint
+                </button>
+
+                <button
+                    type="button"
+                    class="challenge-btn"
+                    onclick="checkChallengeCode()">
+                    ✅ Check Code
+                </button>
+
+            </div>
+
+            <p id="challengeFeedback" style="margin-top:10px;"></p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="python-editor">
+
+    <div class="editor-header">
+
+        <div class="editor-title">
+
+            <div class="python-icon">🐍</div>
+
+            <div>
+                <strong>Python Editor</strong>
+                <small>Code likho • Run karo • AI se Debug karo</small>
+            </div>
+
+        </div>
+
+        <div class="editor-head-actions">
+            <div class="editor-status" id="editorStatus">
+                ● READY
+            </div>
+
+            <button
+                type="button"
+                class="editor-close-btn"
+                onclick="togglePythonEditor(false)">
+                ✕ Close
+            </button>
+        </div>
+
+    </div>
+
+
+    <div class="editor-body">
+
+        <div class="line-numbers" id="lineNumbers">1</div>
+
+        <textarea
+            id="codeEditor"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            placeholder="# Apna Python code yahan likho...
+
+name = 'Harshit'
+
+print('Hello', name)"
+        ></textarea>
+
+    </div>
+
+
+    <div class="editor-actions">
+
+        <button
+            type="button"
+            class="editor-btn run"
+            onclick="runPythonCode()">
+            ▶ Run Code
+        </button>
+
+        <button
+            type="button"
+            class="editor-btn debug"
+            onclick="debugPythonCode()">
+            🐛 AI Debug
+        </button>
+
+        <button
+            type="button"
+            class="editor-btn save"
+            onclick="savePythonCode()">
+            💾 Save
+        </button>
+
+        <button
+            type="button"
+            class="editor-btn clear"
+            onclick="clearPythonCode()">
+            🗑 Clear
+        </button>
+
+    </div>
+
+
+    <div class="output-panel">
+
+        <div class="output-header">
+
+            <span>💻 OUTPUT</span>
+
+            <button
+                type="button"
+                onclick="clearOutput()">
+                Clear
+            </button>
+
+        </div>
+
+        <pre id="codeOutput">Run Code dabao bhai 👆</pre>
+
+    </div>
+
+</section>
+
+
+<button
+    type="button"
+    id="pythonEditorOpenBtn"
+    class="python-editor-open-btn"
+    onclick="togglePythonEditor(true)">
+    🐍 Open Python Editor
+</button>
+
+
+
+
+            <!-- =================================================
+                 🎯 QUICK MODES
+            ================================================== -->
+
+            <div class="mode-bar">
+
+                <button
+                    class="quick-mode active"
+                    onclick="selectQuickMode('teacher', this)">
+                    🧠 Teacher
+                </button>
+
+                <button
+                    class="quick-mode"
+                    onclick="selectQuickMode('debugger', this)">
+                    🐛 Fix Code
+                </button>
+
+                <button
+                    class="quick-mode"
+                    onclick="selectQuickMode('practice', this)">
+                    🧪 Practice
+                </button>
+
+                <button
+                    class="quick-mode"
+                    onclick="selectQuickMode('game', this)">
+                    🎮 Game
+                </button>
+
+                <button
+                    class="quick-mode"
+                    onclick="selectQuickMode('web', this)">
+                    🌐 Website
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 ⌨️ INPUT
+            ================================================== -->
+
+            <div class="input-area">
+
+                <form
+                    class="input-box"
+                    id="chatForm">
+
+                    <input
+                        type="text"
+                        id="userInput"
+                        placeholder="Bhai, Python me kya seekhna hai?"
+                        autocomplete="off"
+                        required>
+
+                    <button
+                        type="submit"
+                        class="send-btn">
+                        Send
+                    </button>
+
+                </form>
+
+                <div class="input-hint">
+                    Enter = Send • Code With Harshit AI
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         🧠 JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        /* =====================================================
+           VARIABLES
+        ===================================================== */
+
+        let voiceEnabled = true;
+
+        let desiModeActive = false;
+
+        let currentMode = "teacher";
+
+        let isDarkTheme = true;
+
+        let currentChatId =
+            "chat_" + Date.now();
+
+
+        /* =====================================================
+           LOADER
+        ===================================================== */
+
+        window.addEventListener("load", () => {
+
+            setTimeout(() => {
+
+                document
+                    .getElementById("loader")
+                    .classList.add("hide");
+
+                renderHistory();
+
+            }, 1500);
+
+        });
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        function toggleSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList.toggle("open");
+
+        }
+
+
+        /* =====================================================
+           MODE SELECT
+        ===================================================== */
+
+        function selectMode(mode, button) {
+
+            currentMode = mode;
+
+            document
+                .querySelectorAll(".mode-btn")
+                .forEach(btn =>
+                    btn.classList.remove("active")
+                );
+
+            if (button) {
+                button.classList.add("active");
+            }
+
+            document
+                .querySelectorAll(".quick-mode")
+                .forEach(btn =>
+                    btn.classList.remove("active")
+                );
+
+            document
+                .querySelectorAll(".quick-mode")
+                .forEach(btn => {
+
+                    if (
+                        btn
+                        .innerText
+                        .toLowerCase()
+                        .includes(
+                            mode === "teacher"
+                                ? "teacher"
+                                : mode === "debugger"
+                                ? "fix"
+                                : mode === "practice"
+                                ? "practice"
+                                : mode === "game"
+                                ? "game"
+                                : "website"
+                        )
+                    ) {
+                        btn.classList.add("active");
+                    }
+
+                });
+
+            toggleSidebarMobile();
+
+        }
+
+
+        function selectQuickMode(mode, button) {
+
+            currentMode = mode;
+
+            document
+                .querySelectorAll(".quick-mode")
+                .forEach(btn =>
+                    btn.classList.remove("active")
+                );
+
+            button.classList.add("active");
+
+            document
+                .querySelectorAll(".mode-btn")
+                .forEach(btn => {
+
+                    btn.classList.toggle(
+                        "active",
+                        btn.dataset.mode === mode
+                    );
+
+                });
+
+        }
+
+
+        function toggleSidebarMobile() {
+
+            if (window.innerWidth <= 850) {
+
+                document
+                    .getElementById("sidebar")
+                    .classList.remove("open");
+
+            }
+
+        }
+
+
+        /* =====================================================
+           DESI MODE
+        ===================================================== */
+
+        function toggleDesi() {
+
+            desiModeActive =
+                !desiModeActive;
+
+            const btn =
+                document.getElementById(
+                    "modeToggleBtn"
+                );
+
+            btn.innerText =
+                desiModeActive
+                    ? "🔥 Desi ON"
+                    : "🔥 Desi";
+
+        }
+
+
+        /* =====================================================
+           VOICE
+        ===================================================== */
+
+        function stopSpeaking() {
+
+            if (
+                "speechSynthesis"
+                in window
+            ) {
+
+                speechSynthesis.cancel();
+
+            }
+
+        }
+
+
+        function toggleVoice() {
+
+            voiceEnabled =
+                !voiceEnabled;
+
+            if (!voiceEnabled) {
+                stopSpeaking();
+            }
+
+            document
+                .getElementById(
+                    "voiceToggleBtn"
+                )
+                .innerText =
+                voiceEnabled
+                    ? "🔊 Audio"
+                    : "🔇 Audio";
+
+        }
+
+
+        function speakText(text) {
+
+            if (
+                !voiceEnabled ||
+                !("speechSynthesis" in window)
+            ) {
+                return;
+            }
+
+            stopSpeaking();
+
+            const clean =
+                text
+                    .replace(/[`*_#]/g, "")
+                    .replace(/<[^>]*>/g, "");
+
+            const speech =
+                new SpeechSynthesisUtterance(clean);
+
+            speech.lang = "hi-IN";
+
+            speech.rate = 1.08;
+
+            speech.pitch = 1;
+
+            speechSynthesis.speak(
+                speech
+            );
+
+        }
+
+
+        /* =====================================================
+           THEME
+        ===================================================== */
+
+        function toggleTheme() {
+
+            isDarkTheme =
+                !isDarkTheme;
+
+            if (isDarkTheme) {
+
+                document.body.style.filter =
+                    "none";
+
+            } else {
+
+                document.body.style.filter =
+                    "brightness(1.25)";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ESCAPE HTML
+        ===================================================== */
+
+        function escapeHTML(text) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.textContent = text;
+
+            return div.innerHTML;
+
+        }
+
+
+        /* =====================================================
+           FORMAT AI RESPONSE
+        ===================================================== */
+
+        function formatAIResponse(text) {
+
+            let safe =
+                escapeHTML(text);
+
+            safe =
+                safe.replace(
+                    /```(?:python)?([\s\S]*?)```/gi,
+                    function(match, code) {
+
+                        return `
+                            <div class="code-block">
+
+                                <div class="code-header">
+
+                                    <span>
+                                        🐍 Python
+                                    </span>
+
+                                    <button
+                                        class="copy-code"
+                                        onclick="copyCode(this)">
+                                        📋 Copy
+                                    </button>
+
+                                </div>
+
+                                <pre>${code.trim()}</pre>
+
+                            </div>
+                        `;
+
+                    }
+                );
+
+            safe =
+                safe.replace(
+                    /\n/g,
+                    "<br>"
+                );
+
+            return safe;
+
+        }
+
+
+        /* =====================================================
+           COPY CODE
+        ===================================================== */
+
+        async function copyCode(button) {
+
+            const code =
+                button
+                    .closest(".code-block")
+                    .querySelector("pre")
+                    .innerText;
+
+            try {
+
+                await navigator
+                    .clipboard
+                    .writeText(code);
+
+                button.innerText =
+                    "✅ Copied";
+
+                setTimeout(() => {
+
+                    button.innerText =
+                        "📋 Copy";
+
+                }, 1500);
+
+            } catch {
+
+                button.innerText =
+                    "❌ Error";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           THINKING
+        ===================================================== */
+
+        function createThinking() {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "thinking";
+
+            div.innerHTML = `
+                🤖 AI soch raha hai
+                <span class="dots">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                </span>
+            `;
+
+            return div;
+
+        }
+
+
+        /* =====================================================
+           CHAT SAVE
+        ===================================================== */
+
+        function saveChat() {
+
+            const sessions =
+                JSON.parse(
+                    localStorage.getItem(
+                        "harshit_chat_sessions"
+                    )
+                ) || {};
+
+            const firstUser =
+                document.querySelector(
+                    ".user-message"
+                );
+
+            const title =
+                firstUser
+                    ? firstUser.innerText
+                        .substring(0, 30)
+                    : "Python Chat";
+
+            sessions[currentChatId] = {
+
+                title:
+                    title + "...",
+
+                html:
+                    document.getElementById(
+                        "chatInner"
+                    ).innerHTML,
+
+                time:
+                    Date.now()
+
+            };
+
+            localStorage.setItem(
+                "harshit_chat_sessions",
+                JSON.stringify(
+                    sessions
+                )
+            );
+
+            renderHistory();
+
+        }
+
+
+        /* =====================================================
+           HISTORY
+        ===================================================== */
+
+        function renderHistory() {
+
+            const sessions =
+                JSON.parse(
+                    localStorage.getItem(
+                        "harshit_chat_sessions"
+                    )
+                ) || {};
+
+            const today =
+                document.getElementById(
+                    "todayChatsList"
+                );
+
+            const saved =
+                document.getElementById(
+                    "yesterdayChatsList"
+                );
+
+            today.innerHTML = "";
+
+            saved.innerHTML = "";
+
+            Object
+                .keys(sessions)
+                .reverse()
+                .forEach(
+                    (id, index) => {
+
+                        const li =
+                            document.createElement(
+                                "li"
+                            );
+
+                        li.innerText =
+                            "💬 " +
+                            sessions[id]
+                                .title;
+
+                        li.onclick =
+                            () =>
+                                loadChat(id);
+
+                        if (index < 5) {
+
+                            today.appendChild(
+                                li
+                            );
+
+                        } else {
+
+                            saved.appendChild(
+                                li
+                            );
+
+                        }
+
+                    }
+                );
+
+        }
+
+
+        function loadChat(id) {
+
+            const sessions =
+                JSON.parse(
+                    localStorage.getItem(
+                        "harshit_chat_sessions"
+                    )
+                ) || {};
+
+            if (!sessions[id]) {
+                return;
+            }
+
+            currentChatId = id;
+
+            document.getElementById(
+                "chatInner"
+            ).innerHTML =
+                sessions[id].html;
+
+            scrollBottom();
+
+            toggleSidebarMobile();
+
+        }
+
+
+        /* =====================================================
+           NEW CHAT
+        ===================================================== */
+
+        function startNewChat() {
+
+            stopSpeaking();
+
+            currentChatId =
+                "chat_" + Date.now();
+
+            document.getElementById(
+                "chatInner"
+            ).innerHTML = `
+
+                <div class="welcome">
+
+                    <h1>
+                        New Chat 🚀
+                    </h1>
+
+                    <p>
+                        Chal bhai, nayi Python journey
+                        start karte hain 😎
+                    </p>
+
+                </div>
+
+                <div class="message ai-message">
+
+                    Nayi chat ready hai bhai! 🔥<br><br>
+
+                    Bata kya seekhna hai?
+
+                </div>
+
+            `;
+
+            toggleSidebarMobile();
+
+        }
+
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        function searchCodes() {
+
+            const query =
+                prompt(
+                    "Kya search karna hai?"
+                );
+
+            if (!query) {
+                return;
+            }
+
+            const sessions =
+                JSON.parse(
+                    localStorage.getItem(
+                        "harshit_chat_sessions"
+                    )
+                ) || {};
+
+            const found =
+                Object.values(
+                    sessions
+                ).filter(
+                    session =>
+                        session.title
+                            .toLowerCase()
+                            .includes(
+                                query.toLowerCase()
+                            )
+                );
+
+            alert(
+                found.length
+                    ? `${found.length} chat mili bhai 🔥`
+                    : "Koi matching chat nahi mili 😅"
+            );
+
+        }
+
+
+        /* =====================================================
+           SCROLL
+        ===================================================== */
+
+        function scrollBottom() {
+
+            const chat =
+                document.getElementById(
+                    "chatBox"
+                );
+
+            chat.scrollTop =
+                chat.scrollHeight;
+
+        }
+
+
+        /* =====================================================
+           SEND MESSAGE
+        ===================================================== */
+
+        const chatForm =
+            document.getElementById(
+                "chatForm"
+            );
+
+        const userInput =
+            document.getElementById(
+                "userInput"
+            );
+
+        const chatInner =
+            document.getElementById(
+                "chatInner"
+            );
+
+
+        chatForm.addEventListener(
+            "submit",
+            async function(e) {
+
+                e.preventDefault();
+
+                const message =
+                    userInput.value.trim();
+
+                if (!message) {
+                    return;
+                }
+
+                stopSpeaking();
+
+
+                /* USER MESSAGE */
+
+                const userDiv =
+                    document.createElement(
+                        "div"
+                    );
+
+                userDiv.className =
+                    "message user-message";
+
+                userDiv.innerText =
+                    message;
+
+                chatInner.appendChild(
+                    userDiv
+                );
+
+                userInput.value = "";
+
+                scrollBottom();
+
+
+                /* THINKING */
+
+                const thinking =
+                    createThinking();
+
+                chatInner.appendChild(
+                    thinking
+                );
+
+                scrollBottom();
+
+
+                try {
+
+                    const body =
+                        new URLSearchParams();
+
+                    body.append(
+                        "msg",
+                        message
+                    );
+
+                    body.append(
+                        "desi",
+                        desiModeActive
+                            ? "true"
+                            : "false"
+                    );
+
+                    body.append(
+                        "mode",
+                        currentMode
+                    );
+
+
+                    const response =
+                        await fetch(
+                            "/get_response",
+                            {
+
+                                method:
+                                    "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/x-www-form-urlencoded"
+                                },
+
+                                body:
+                                    body.toString()
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    thinking.remove();
+
+
+                    const aiDiv =
+                        document.createElement(
+                            "div"
+                        );
+
+                    aiDiv.className =
+                        "message ai-message";
+
+
+                    if (
+                        data.success === false
+                    ) {
+
+                        aiDiv.innerHTML =
+                            escapeHTML(
+                                data.reply ||
+                                "Bhai kuch problem aa gayi 😅"
+                            );
+
+                    } else {
+
+                        aiDiv.innerHTML =
+                            formatAIResponse(
+                                data.reply ||
+                                "AI ne koi reply nahi diya."
+                            );
+
+                    }
+
+
+                    chatInner.appendChild(
+                        aiDiv
+                    );
+
+                    scrollBottom();
+
+                    saveChat();
+
+
+                    if (
+                        data.reply &&
+                        voiceEnabled
+                    ) {
+
+                        speakText(
+                            data.reply
+                        );
+
+                    }
+
+
+                } catch (error) {
+
+                    thinking.remove();
+
+
+                    const errorDiv =
+                        document.createElement(
+                            "div"
+                        );
+
+                    errorDiv.className =
+                        "message ai-message";
+
+                    errorDiv.innerText =
+                        "Bhai server se connect hone me problem aa gayi 😅";
+
+                    chatInner.appendChild(
+                        errorDiv
+                    );
+
+                    scrollBottom();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ENTER KEY
+        ===================================================== */
+
+        userInput.addEventListener(
+            "keydown",
+            function(e) {
+
+                if (
+                    e.key === "Enter" &&
+                    !e.shiftKey
+                ) {
+
+                    e.preventDefault();
+
+                    chatForm.requestSubmit();
+
+                }
+
+            }
+        );
+
+
+    
+/* =====================================================
+   🐍 V3 PYTHON EDITOR
+===================================================== */
+
+const codeEditor = document.getElementById("codeEditor");
+const lineNumbers = document.getElementById("lineNumbers");
+const codeOutput = document.getElementById("codeOutput");
+const editorStatus = document.getElementById("editorStatus");
+
+
+function updateLineNumbers() {
+
+    if (!codeEditor || !lineNumbers) return;
+
+    const count = codeEditor.value.split("\n").length;
+
+    let numbers = "";
+
+    for (let i = 1; i <= count; i++) {
+        numbers += i + "\n";
+    }
+
+    lineNumbers.textContent = numbers;
+}
+
+
+if (codeEditor) {
+
+    codeEditor.addEventListener("input", updateLineNumbers);
+
+    codeEditor.addEventListener("scroll", () => {
+        lineNumbers.scrollTop = codeEditor.scrollTop;
+    });
+
+    codeEditor.addEventListener("keydown", function(e) {
+
+        if (e.key === "Tab") {
+
+            e.preventDefault();
+
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+
+            this.value =
+                this.value.substring(0, start) +
+                "    " +
+                this.value.substring(end);
+
+            this.selectionStart = start + 4;
+            this.selectionEnd = start + 4;
+
+            updateLineNumbers();
+        }
+    });
+
+    updateLineNumbers();
+}
+
+
+/* =====================================================
+   ▶ RUN PYTHON
+===================================================== */
+
+async function runPythonCode() {
+
+    const code = codeEditor.value.trim();
+
+    if (!code) {
+        codeOutput.textContent = "Bhai pehle Python code likh 😄";
+        return;
+    }
+
+    if (editorStatus) {
+        editorStatus.textContent = "● RUNNING";
+        editorStatus.style.color = "#ffd166";
+    }
+
+    codeOutput.textContent = "⏳ Python code run ho raha hai...";
+
+    try {
+
+        const body = new URLSearchParams();
+        body.append("code", code);
+
+        const response = await fetch("/run_code", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/x-www-form-urlencoded"
+            },
+            body: body.toString()
+        });
+
+        const data = await response.json();
+
+        codeOutput.textContent =
+            data.output || "Koi output nahi mila.";
+
+        if (editorStatus) {
+            editorStatus.textContent =
+                data.success ? "● SUCCESS" : "● ERROR";
+
+            editorStatus.style.color =
+                data.success ? "#35e28a" : "#ff6b7a";
+        }
+
+    } catch (error) {
+
+        codeOutput.textContent =
+            "❌ Server se connection nahi ho paaya.";
+
+        if (editorStatus) {
+            editorStatus.textContent = "● OFFLINE";
+            editorStatus.style.color = "#ff6b7a";
+        }
+    }
+}
+
+
+/* =====================================================
+   🐛 AI DEBUG
+===================================================== */
+
+function debugPythonCode() {
+
+    const code = codeEditor.value.trim();
+
+    if (!code) {
+        codeOutput.textContent = "Bhai pehle code likh 😄";
+        return;
+    }
+
+    const debugMessage =
+        "Is Python code ko Debugger Mode mein check karo:\n\n" +
+        "```python\n" +
+        code +
+        "\n```\n\n" +
+        "Problem kya hai, error kyu aa raha hai, " +
+        "aur correct code step-by-step samjhao.";
+
+    userInput.value = debugMessage;
+
+    currentMode = "debugger";
+
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+        btn.classList.toggle(
+            "active",
+            btn.dataset.mode === "debugger"
+        );
+    });
+
+    document.querySelectorAll(".quick-mode").forEach(btn => {
+        btn.classList.remove("active");
+
+        if (btn.innerText.toLowerCase().includes("fix")) {
+            btn.classList.add("active");
+        }
+    });
+
+    chatForm.requestSubmit();
+}
+
+
+/* =====================================================
+   💾 SAVE CODE
+===================================================== */
+
+function savePythonCode() {
+
+    const code = codeEditor.value;
+
+    localStorage.setItem(
+        "harshit_python_code",
+        code
+    );
+
+    codeOutput.textContent =
+        "💾 Code browser mein save ho gaya bhai!";
+
+    if (editorStatus) {
+        editorStatus.textContent = "● SAVED";
+        editorStatus.style.color = "#00d4ff";
+    }
+}
+
+
+/* =====================================================
+   📂 LOAD CODE
+===================================================== */
+
+function loadPythonCode() {
+
+    const saved = localStorage.getItem(
+        "harshit_python_code"
+    );
+
+    if (saved && codeEditor) {
+        codeEditor.value = saved;
+        updateLineNumbers();
+    }
+}
+
+loadPythonCode();
+
+
+/* =====================================================
+   🗑 CLEAR CODE
+===================================================== */
+
+function clearPythonCode() {
+
+    codeEditor.value = "";
+
+    updateLineNumbers();
+
+    codeOutput.textContent =
+        "Editor clear ho gaya bhai 🗑️";
+
+    if (editorStatus) {
+        editorStatus.textContent = "● READY";
+        editorStatus.style.color = "#35e28a";
+    }
+}
+
+
+/* =====================================================
+   🧹 CLEAR OUTPUT
+===================================================== */
+
+function clearOutput() {
+
+    codeOutput.textContent =
+        "Output cleared.";
+
+}
+
+    
+/* =====================================================
+   🐍 PYTHON EDITOR TOGGLE
+===================================================== */
+
+function togglePythonEditor(show) {
+
+    const editor =
+        document.querySelector(".python-editor");
+
+    const openButton =
+        document.getElementById(
+            "pythonEditorOpenBtn"
+        );
+
+    if (!editor) return;
+
+    if (show === true) {
+
+        editor.classList.remove(
+            "editor-hidden"
+        );
+
+        if (openButton) {
+            openButton.classList.remove("show");
+        }
+
+    } else {
+
+        editor.classList.add(
+            "editor-hidden"
+        );
+
+        if (openButton) {
+            openButton.classList.add("show");
+        }
+    }
+}
+
+
+/* =====================================================
+   🚀 SPACE INTRO CONTROLLER
+===================================================== */
+
+(function () {
+
+    const intro =
+        document.getElementById("spaceIntro");
+
+    if (!intro) return;
+
+    let closed = false;
+
+    function closeIntro() {
+
+        if (closed) return;
+
+        closed = true;
+
+        intro.classList.add("hide");
+
+        setTimeout(function () {
+
+            if (
+                intro &&
+                intro.parentNode
+            ) {
+                intro.parentNode.removeChild(
+                    intro
+                );
+            }
+
+        }, 550);
+    }
+
+    /*
+       Intro intentionally starts immediately.
+       It does not depend on window.load, so a slow
+       image/font/resource cannot keep the app stuck.
+    */
+
+    setTimeout(
+        closeIntro,
+        1750
+    );
+
+    /* Absolute safety fallback */
+    setTimeout(
+        closeIntro,
+        3500
+    );
+
+})();
+
+
+/* =====================================================
+   📚 LEARNING DASHBOARD / XP / CHALLENGES
+===================================================== */
+
+const LESSONS = [
+    {
+        title: "Python Basics",
+        prompt: "Mujhe Python basics bilkul beginner level se examples ke saath sikhao."
+    },
+    {
+        title: "Variables & Data",
+        prompt: "Variables aur basic data types Python mein simple examples ke saath samjhao."
+    },
+    {
+        title: "If / Else",
+        prompt: "Python mein if, elif aur else ko beginner-friendly examples ke saath samjhao."
+    },
+    {
+        title: "Loops",
+        prompt: "Python for aur while loops ko real examples ke saath samjhao."
+    },
+    {
+        title: "Functions",
+        prompt: "Python functions ko beginner level se practical examples ke saath samjhao."
+    },
+    {
+        title: "Mini Projects",
+        prompt: "Mere level ke hisaab se ek Python mini project step-by-step start karwao."
+    }
+];
+
+const CHALLENGES = [
+    {
+        text: "2 numbers ko add karke result print karo.",
+        hint: "Do variables banao aur + operator use karo."
+    },
+    {
+        text: "Ek variable mein apna naam store karke print karo.",
+        hint: "Example: name = 'Harshit'"
+    },
+    {
+        text: "Check karo ki number 10 se bada hai ya nahi.",
+        hint: "if condition aur > operator use karo."
+    },
+    {
+        text: "1 se 5 tak numbers print karo.",
+        hint: "for loop aur range() try karo."
+    },
+    {
+        text: "Ek function banao jo 'Hello Python' print kare.",
+        hint: "def keyword se function start hota hai."
+    }
+];
+
+let challengeIndex = 0;
+
+function getLearningState() {
+    try {
+        return JSON.parse(
+            localStorage.getItem("code_with_harshit_progress")
+        ) || { done: [], xp: 0 };
+    } catch {
+        return { done: [], xp: 0 };
+    }
+}
+
+function saveLearningState(state) {
+    localStorage.setItem(
+        "code_with_harshit_progress",
+        JSON.stringify(state)
+    );
+}
+
+function updateLearningUI() {
+
+    const state = getLearningState();
+    const total = LESSONS.length;
+    const completed = state.done.length;
+    const percent = Math.round((completed / total) * 100);
+
+    const fill = document.getElementById("progressFill");
+    const label = document.getElementById("progressLabel");
+    const xp = document.getElementById("xpLabel");
+
+    if (fill) fill.style.width = percent + "%";
+    if (label) label.textContent = percent + "% Complete";
+    if (xp) xp.textContent = state.xp + " XP";
+
+    document.querySelectorAll(".lesson-item").forEach(btn => {
+
+        const index = Number(btn.dataset.lesson);
+
+        btn.classList.toggle(
+            "done",
+            state.done.includes(index)
+        );
+
+        if (state.done.includes(index)) {
+            if (!btn.textContent.includes("✅")) {
+                btn.textContent += " ✅";
+            }
+        }
+    });
+}
+
+function selectLesson(index) {
+
+    const lesson = LESSONS[index];
+    if (!lesson) return;
+
+    userInput.value = lesson.prompt;
+
+    if (typeof currentMode !== "undefined") {
+        currentMode = "teacher";
+    }
+
+    chatForm.requestSubmit();
+
+    const state = getLearningState();
+
+    if (!state.done.includes(index)) {
+        state.done.push(index);
+        state.xp += 20;
+        saveLearningState(state);
+        updateLearningUI();
+    }
+}
+
+function loadChallenge() {
+
+    challengeIndex =
+        Math.floor(Math.random() * CHALLENGES.length);
+
+    const challenge = CHALLENGES[challengeIndex];
+
+    const text =
+        document.getElementById("challengeText");
+
+    const feedback =
+        document.getElementById("challengeFeedback");
+
+    if (text) text.textContent = challenge.text;
+    if (feedback) feedback.textContent = "";
+
+}
+
+function putChallengeHint() {
+
+    const challenge = CHALLENGES[challengeIndex];
+
+    const feedback =
+        document.getElementById("challengeFeedback");
+
+    if (feedback) {
+        feedback.textContent =
+            "💡 Hint: " + challenge.hint;
+    }
+}
+
+async function checkChallengeCode() {
+
+    const codeEditor =
+        document.getElementById("codeEditor");
+
+    const feedback =
+        document.getElementById("challengeFeedback");
+
+    if (!codeEditor || !feedback) return;
+
+    const code = codeEditor.value.trim();
+
+    if (!code) {
+        feedback.textContent =
+            "😅 Pehle editor mein code likh bhai.";
+        return;
+    }
+
+    feedback.textContent =
+        "⏳ Code check ho raha hai...";
+
+    try {
+
+        const body = new URLSearchParams();
+        body.append("code", code);
+
+        const response = await fetch(
+            "/run_code",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+                body: body.toString()
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            const state = getLearningState();
+            state.xp += 10;
+            saveLearningState(state);
+            updateLearningUI();
+
+            feedback.textContent =
+                "🔥 Code run ho gaya! +10 XP";
+        } else {
+
+            feedback.textContent =
+                "❌ Code mein error hai. AI Debug try kar.";
+        }
+
+    } catch {
+
+        feedback.textContent =
+            "❌ Server connection problem.";
+    }
+}
+
+updateLearningUI();
+
+</script>
+
+</body>
+
+</html>
